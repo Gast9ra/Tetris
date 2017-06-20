@@ -48,6 +48,12 @@ public class Main extends Application {
                 new Piece(1, Direction.RIGHT),
                 new Piece(2, Direction.RIGHT)
         ));
+        original.add(new Tetromino(Color.BLACK,
+                new Piece(0, Direction.DOWN),
+                new Piece(1,Direction.DOWN,Direction.LEFT),
+                new Piece(1,Direction.DOWN),
+                new Piece(1,Direction.RIGHT)));
+
         original.add(new Tetromino(Color.RED,
                 new Piece(0, Direction.DOWN),
                 new Piece(1, Direction.LEFT),
@@ -104,31 +110,31 @@ public class Main extends Application {
     }
 
     private void placePiece(Piece piece) {
-        grid[piece.x][piece.y]++;
+        grid[piece.getX()][piece.getY()]++;
     }
 
     private void removePiece(Piece piece) {
-        grid[piece.x][piece.y]--;
+        grid[piece.getX()][piece.getY()]--;
     }
 
     private boolean isOffscreen(Piece piece) {
-        return piece.x < 0 || piece.x >= GRID_WIDTH
-                || piece.y < 0 || piece.y >= GRID_HEIGHT;
+        return piece.getX() < 0 || piece.getX() >= GRID_WIDTH
+                || piece.getY() < 0 || piece.getY() >= GRID_HEIGHT;
     }
 
     private void makeMove(Consumer<Tetromino> onSuccess, Consumer<Tetromino> onFail, boolean endMove) {
-        selected.pieces.forEach(this::removePiece);
+        selected.getPieces().forEach(this::removePiece);
 
         onSuccess.accept(selected);
 
-        boolean offscreen = selected.pieces.stream().anyMatch(this::isOffscreen);
+        boolean offscreen = selected.getPieces().stream().anyMatch(this::isOffscreen);
 
         if (!offscreen) {
-            selected.pieces.forEach(this::placePiece);
+            selected.getPieces().forEach(this::placePiece);
         } else {
             onFail.accept(selected);
 
-            selected.pieces.forEach(this::placePiece);
+            selected.getPieces().forEach(this::placePiece);
 
             if (endMove) {
                 sweep();
@@ -138,11 +144,11 @@ public class Main extends Application {
         }
 
         if (!isValidState()) {
-            selected.pieces.forEach(this::removePiece);
+            selected.getPieces().forEach(this::removePiece);
 
             onFail.accept(selected);
 
-            selected.pieces.forEach(this::placePiece);
+            selected.getPieces().forEach(this::placePiece);
 
             if (endMove) {
                 sweep();
@@ -176,11 +182,11 @@ public class Main extends Application {
 
         rows.forEach(row -> {
             tetrominos.stream().forEach(tetromino -> {
-                tetromino.pieces.stream()
-                        .filter(piece -> piece.y < row)
+                tetromino.getPieces().stream()
+                        .filter(piece -> piece.getY() < row)
                         .forEach(piece -> {
                             removePiece(piece);
-                            piece.y++;
+                            piece.setY(piece.getY()+1);
                             placePiece(piece);
                         });
             });
@@ -213,7 +219,7 @@ public class Main extends Application {
         selected = tetromino;
 
         tetrominos.add(tetromino);
-        tetromino.pieces.forEach(this::placePiece);
+        tetromino.getPieces().forEach(this::placePiece);
 
         if (!isValidState()) {
             System.out.println("Game Over");

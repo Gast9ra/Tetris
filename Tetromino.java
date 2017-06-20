@@ -13,11 +13,11 @@ import static com.Gast9ra.Main.TILE_SIZE;
 
 public class Tetromino {
 
-    public int x, y;
+    private int x, y;
 
-    public Color color;
+    private Color color;
 
-    public List<Piece> pieces;
+    private List<Piece> pieces;
 
     public Tetromino(Color color, Piece... pieces) {
         this.color = color;
@@ -32,8 +32,8 @@ public class Tetromino {
         y += dy;
 
         pieces.forEach(p -> {
-            p.x += dx;
-            p.y += dy;
+            p.setX(p.getX()+dx);
+            p.setY(p.getY()+dy);
         });
     }
 
@@ -44,19 +44,19 @@ public class Tetromino {
     public void draw(GraphicsContext g) {
         g.setFill(color);
 
-        pieces.forEach(p -> g.fillRect(p.x * TILE_SIZE, p.y * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+        pieces.forEach(p -> g.fillRect(p.getX() * TILE_SIZE, p.getY() * TILE_SIZE, TILE_SIZE, TILE_SIZE));
     }
 
     public void rotateBack() {
-        pieces.forEach(p -> p.setDirection(p.directions.stream().map(Direction::prev).collect(Collectors.toList()).toArray(new Direction[0])));
+        pieces.forEach(p -> p.setDirection(p.getDirections().stream().map(Direction::prev).collect(Collectors.toList()).toArray(new Direction[0])));
     }
 
     public void rotate() {
-        pieces.forEach(p -> p.setDirection(p.directions.stream().map(Direction::next).collect(Collectors.toList()).toArray(new Direction[0])));
+        pieces.forEach(p -> p.setDirection(p.getDirections().stream().map(Direction::next).collect(Collectors.toList()).toArray(new Direction[0])));
     }
 
     public void detach(int x, int y) {
-        pieces.removeIf(p -> p.x == x && p.y == y);
+        pieces.removeIf(p -> p.getX() == x && p.getY() == y);
     }
 
     public Tetromino copy() {
@@ -64,5 +64,37 @@ public class Tetromino {
                 .map(Piece::copy)
                 .collect(Collectors.toList())
                 .toArray(new Piece[0]));
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public List<Piece> getPieces() {
+        return pieces;
+    }
+
+    public void setPieces(List<Piece> pieces) {
+        this.pieces = pieces;
     }
 }

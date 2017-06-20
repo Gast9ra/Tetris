@@ -5,10 +5,10 @@ import java.util.List;
 
 public class Piece {
 
-    public int distance;
-    public List<Direction> directions;
-    public Tetromino parent;
-    public int x, y;
+    private int distance;
+    private List<Direction> directions;
+    private Tetromino parent;
+    private int x, y;
 
     public Piece(int distance, Direction... direction) {
         this.distance = distance;
@@ -25,8 +25,8 @@ public class Piece {
             dy += distance * d.y;
         }
 
-        x = parent.x + dx;
-        y = parent.y + dy;
+        x = parent.getX() + dx;
+        y = parent.getY() + dy;
     }
 
     public void setDirection(Direction... direction) {
@@ -39,11 +39,47 @@ public class Piece {
             dy += distance * d.y;
         }
 
-        x = parent.x + dx;
-        y = parent.y + dy;
+        x = parent.getX() + dx;
+        y = parent.getY() + dy;
     }
 
     public Piece copy() {
         return new Piece(distance, directions.toArray(new Direction[0]));
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    public List<Direction> getDirections() {
+        return directions;
+    }
+
+    public void setDirections(List<Direction> directions) {
+        this.directions = directions;
+    }
+
+    public Tetromino getParent() {
+        return parent;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }
